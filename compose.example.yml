@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  kafka:
+    image: 'bitnami/kafka:latest'
+    hostname: kafka
+    ports:
+      - '9092:9092'
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: "yes"
+
+  bzkf-kafkatopic-splitter:
+    image: 'bzkf-kafkatopic-splitter'
+    depends_on:
+      - kafka
+    restart: unless-stopped
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+
