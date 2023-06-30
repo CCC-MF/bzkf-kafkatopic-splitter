@@ -10,7 +10,7 @@ services:
       ALLOW_PLAINTEXT_LISTENER: "yes"
 
   bzkf-kafkatopic-splitter:
-    image: 'bzkf-kafkatopic-splitter'
+    build: .
     depends_on:
       - kafka
     restart: unless-stopped
