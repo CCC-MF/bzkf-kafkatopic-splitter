@@ -84,7 +84,7 @@ struct MessageWithYear {
     year: u16,
 }
 
-#[tokio::main]
+#[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn Error>> {
     #[cfg(debug_assertions)]
     SimpleLogger::new().with_level(Debug).init().unwrap();
