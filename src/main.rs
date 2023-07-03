@@ -79,9 +79,15 @@ impl Display for AppError {
 }
 
 #[derive(Deserialize)]
-struct MessageWithYear {
+struct PayloadWithYear {
     #[serde(rename = "YEAR")]
     year: u16,
+}
+
+#[derive(Deserialize)]
+struct MessageWithPayload {
+    #[serde(rename = "payload")]
+    inner_payload: PayloadWithYear,
 }
 
 #[tokio::main(flavor = "current_thread")]
@@ -122,14 +128,19 @@ async fn main() -> Result<(), Box<dyn Error>> {
     loop {
         match consumer.recv().await {
             Ok(msg) => match msg.payload_view::<str>() {
-                Some(Ok(s)) => match serde_json::from_str::<MessageWithYear>(s) {
+                Some(Ok(s)) => match serde_json::from_str::<MessageWithPayload>(s) {
                     Ok(mwy) => {
-                        debug!("Message for topic '{}{}'", topic_prefix, mwy.year);
+                        debug!(
+                            "Message for topic '{}{}'",
+                            topic_prefix, mwy.inner_payload.year
+                        );
                         let _ = producer
                             .send(
-                                FutureRecord::to(format!("{}{}", topic_prefix, mwy.year).as_str())
-                                    .payload(s)
-                                    .key(msg.key().unwrap()),
+                                FutureRecord::to(
+                                    format!("{}{}", topic_prefix, mwy.inner_payload.year).as_str(),
+                                )
+                                .payload(s)
+                                .key(msg.key().unwrap()),
                                 Duration::from_secs(0),
                             )
                             .await;
