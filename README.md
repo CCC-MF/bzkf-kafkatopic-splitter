@@ -11,7 +11,7 @@ Das zugehörige Docker-Image kann über die folgenden Parameter konfiguriert wer
 * `KAFKA_SOURCE_TOPIC`: Quell-Topic, aus dem Nachrichten gelesen werden. Standardwert: `onkostar.MELDUNG_EXPORT`
 * `KAFKA_DESTINATION_TOPIC_PREFIX`: Prefix für die Zieltopics. Standardwert: `onkostar.MELDUNG_EXPORT.` (mit Punkt am Ende). Hier wird das Jahr angehängt.
 
-Container werden als User mit ID 1000 ausgeführt.
+Container werden, wie auch andere BZKF-Container, als User/Gruppe 65532:65532 ausgeführt.
 
 Kann keine Verbindung zu Kafka aufgebaut werden, beendet sich der Container und kann durch `restart: unless-stopped` automatisch neu gestartet werden.
 
